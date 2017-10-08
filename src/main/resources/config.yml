@@ -1,0 +1,8 @@
+messaging_provider: "auto"
+mysql_port: "3306"
+mysql_host: "localhost"
+mysql_database: "openchat"
+mysql_user: "user"
+mysql_pass: "pass"
+mysql_prefix: "oc_"
+debug: true
