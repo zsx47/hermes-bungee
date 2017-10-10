@@ -30,7 +30,7 @@ public class Nickname extends Command {
             if (args[0].toUpperCase() == "OFF") {
                 user.setNickname(null);
             } else {
-                if (sender.hasPermission("openchat.nickname")) {
+                if (sender.hasPermission("hermes.nickname")) {
                     user.setNickname(args[0]);
                     getPlugin().getMessagingController().sendNewNotification((ProxiedPlayer) sender, "Your display name is now: " + args[0]);
                 } else {

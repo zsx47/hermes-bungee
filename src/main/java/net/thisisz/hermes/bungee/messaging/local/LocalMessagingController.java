@@ -1,5 +1,6 @@
 package net.thisisz.hermes.bungee.messaging.local;
 
+import net.md_5.bungee.api.ChatColor;
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.MessagingController;
@@ -37,4 +38,6 @@ public class LocalMessagingController {
     public void displayUserNotification(UUID to, String message) {
         provider.displayUserNotification(to, message);
     }
+
+
 }
