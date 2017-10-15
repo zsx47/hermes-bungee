@@ -43,7 +43,7 @@ public class LocalBungeeProvider implements LocalProvider {
         ComponentBuilder finalMessage = new ComponentBuilder("");
         finalMessage = finalMessage.append(carrotL.create()).append(spaceComp.create()).append(bracketL.color(ChatColor.DARK_GREEN).create())
                 .append(serverName.color(ChatColor.GREEN).create()).append(bracketR.color(ChatColor.DARK_GREEN).create()).append(spaceComp.create())
-                .append(playerPrefix.create()).append(spaceComp.create()).append(playerName.create()).append(spaceComp.create()).append(carrotR.create())
+                .append(playerPrefix.create()).append(playerName.create()).append(spaceComp.create()).append(carrotR.create())
                 .append(colon.create()).append(spaceComp.create()).append(translateColorCodes(message));
         getPlugin().getProxy().broadcast(finalMessage.create());
     }
