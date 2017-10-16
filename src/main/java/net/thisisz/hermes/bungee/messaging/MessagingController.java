@@ -46,7 +46,7 @@ public class MessagingController {
         networkController.sendNewUserErrorMessage(to, message);
     }
 
-    public void sendNewNotification(ProxiedPlayer to, String message) {
+    public void sendNewNotification(UUID to, String message) {
         networkController.sendNewUserNotification(to, message);
     }
 

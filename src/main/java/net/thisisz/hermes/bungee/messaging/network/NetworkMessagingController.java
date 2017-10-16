@@ -52,8 +52,8 @@ public class NetworkMessagingController {
         provider.sendNewUserErrorMessage(to.getUniqueId(), message);
     }
 
-    public void sendNewUserNotification(ProxiedPlayer to, String message) {
-        provider.sendNewUserNotification(to.getUniqueId(), message);
+    public void sendNewUserNotification(UUID to, String message) {
+        provider.sendNewUserNotification(to, message);
     }
 
 }

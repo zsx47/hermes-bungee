@@ -6,6 +6,8 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.event.EventHandler;
+import net.thisisz.hermes.bungee.asynctasks.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.callbacks.PlayerLoginNotification;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.tasks.SendChatMessage;
 
@@ -38,7 +40,7 @@ public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
 
     @EventHandler
     public void onLoginEvent(PostLoginEvent event) {
-        getPlugin().getStorageController().loadLocalUserToCache(event.getPlayer().getUniqueId());
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), event.getPlayer().getUniqueId(), new PlayerLoginNotification(getPlugin(), event.getPlayer().getUniqueId())));
     }
 
 

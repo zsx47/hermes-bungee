@@ -1,5 +1,6 @@
 package net.thisisz.hermes.bungee.messaging.local.provider;
 
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -39,6 +40,9 @@ public class LocalBungeeProvider implements LocalProvider {
         ComponentBuilder serverName = new ComponentBuilder(server.getName());
         CachedUser user = getPlugin().getStorageController().getCachedUser(player);
         ComponentBuilder playerName = new ComponentBuilder(translateColorCodes(user.getDisplayName()));
+        ComponentBuilder realName = new ComponentBuilder(user.getName());
+        HoverEvent showRealName = new HoverEvent(HoverEvent.Action.SHOW_TEXT, realName.create());
+        playerName.event(showRealName);
         ComponentBuilder playerPrefix = new ComponentBuilder(translateColorCodes(user.getPrefix()));
         ComponentBuilder finalMessage = new ComponentBuilder("");
         finalMessage = finalMessage.append(carrotL.create()).append(spaceComp.create()).append(bracketL.color(ChatColor.DARK_GREEN).create())
@@ -56,7 +60,7 @@ public class LocalBungeeProvider implements LocalProvider {
 
     @Override
     public void displayUserNotification(UUID to, String message) {
-        ComponentBuilder notification = new ComponentBuilder(message);
+        ComponentBuilder notification = new ComponentBuilder(translateColorCodes(message));
         getPlugin().getProxy().getPlayer(to).sendMessage(notification.create());
     }
 

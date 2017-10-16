@@ -6,7 +6,9 @@ import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
 import net.thisisz.hermes.bungee.messaging.network.provider.redis.object.NetworkMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.redis.object.NetworkNotification;
 import net.thisisz.hermes.bungee.messaging.network.provider.redis.task.DisplayNetworkMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.redis.task.DisplayNetworkNotification;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -18,6 +20,7 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
     public RedisBungeeProvider(NetworkMessagingController parent) {
         this.networkController = parent;
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-chat-messages");
+        getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-notification");
         getPlugin().getProxy().getPluginManager().registerListener(getPlugin(), this);
     }
 
@@ -38,7 +41,9 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
 
     @Override
     public void sendNewUserNotification(UUID to, String message) {
-
+        NetworkNotification obj = new NetworkNotification(to, message);
+        Gson gson = new Gson();
+        getPlugin().getRedisBungeeAPI().sendChannelMessage("network-notification", gson.toJson(obj));
     }
 
     @Override
@@ -52,6 +57,10 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
             Gson gson = new Gson();
             NetworkMessage message = gson.fromJson(event.getMessage(), NetworkMessage.class);
             getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(message, this));
+        } else if (Objects.equals(event.getChannel(), "network-notification")) {
+            Gson gson = new Gson();
+            NetworkNotification message = gson.fromJson(event.getMessage(), NetworkNotification.class);
+            getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkNotification(message, this));
         }
     }
 

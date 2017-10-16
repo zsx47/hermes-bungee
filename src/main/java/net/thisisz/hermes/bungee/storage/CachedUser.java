@@ -116,6 +116,10 @@ public class CachedUser {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
     private void updateUserData() {
         getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPrefix(this));
     }

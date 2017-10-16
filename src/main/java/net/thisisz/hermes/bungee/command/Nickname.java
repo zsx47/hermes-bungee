@@ -32,7 +32,7 @@ public class Nickname extends Command {
             } else {
                 if (sender.hasPermission("hermes.nickname")) {
                     user.setNickname(args[0]);
-                    getPlugin().getMessagingController().sendNewNotification((ProxiedPlayer) sender, "Your display name is now: " + args[0]);
+                    getPlugin().getMessagingController().sendNewNotification(((ProxiedPlayer) sender).getUniqueId(), "Your display name is now: " + args[0]);
                 } else {
                     getPlugin().getMessagingController().sendNewErrorMessage((ProxiedPlayer) sender, "You do not have permission to do this.");
                 }
