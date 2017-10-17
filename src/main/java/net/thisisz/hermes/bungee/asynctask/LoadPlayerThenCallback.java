@@ -1,6 +1,6 @@
-package net.thisisz.hermes.bungee.asynctasks;
+package net.thisisz.hermes.bungee.asynctask;
 
-import net.thisisz.hermes.bungee.callbacks.Callback;
+import net.thisisz.hermes.bungee.callback.Callback;
 import net.thisisz.hermes.bungee.HermesChat;
 
 import java.util.UUID;

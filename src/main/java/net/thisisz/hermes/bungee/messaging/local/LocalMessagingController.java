@@ -1,10 +1,13 @@
 package net.thisisz.hermes.bungee.messaging.local;
 
-import net.md_5.bungee.api.ChatColor;
 import net.thisisz.hermes.bungee.HermesChat;
+import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.callback.Callback;
+import net.thisisz.hermes.bungee.messaging.local.callback.*;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.MessagingController;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalBungeeProvider;
+import net.thisisz.hermes.bungee.storage.StorageController;
 
 import java.util.UUID;
 
@@ -27,16 +30,53 @@ public class LocalMessagingController {
         return controller.getPlugin();
     }
 
-    public void displayNewChatMessage(UUID sender, String server, String message) {
-        provider.displayNewChatMessage(sender, getPlugin().getProxy().getServerInfo(server), message);
+    private StorageController getStorageController() {
+        return controller.getPlugin().getStorageController();
+    }
+
+    public void displayChatMessage(UUID sender, String server, String message) {
+        if (getStorageController().isLoaded(sender)) {
+            provider.displayChatMessage(getStorageController().getCachedUser(sender), getPlugin().getProxy().getServerInfo(server), message);
+        } else {
+            //load user in async call then call this method again
+            loadCachedUserThenCallback( sender, new DisplayChatMessage(getPlugin(), sender, server, message));
+        }
     }
 
     public void displayUserErrorMessage(UUID to, String message) {
-        provider.displayUserErrorMessage(to, message);
+        if (getStorageController().isLoaded(to)) {
+            provider.displayUserErrorMessage(getStorageController().getCachedUser(to), message);
+        } else {
+            loadCachedUserThenCallback(to, new DisplayUserErrorMessage(getPlugin(), to, message));
+        }
     }
 
     public void displayUserNotification(UUID to, String message) {
-        provider.displayUserNotification(to, message);
+        if (getStorageController().isLoaded(to)) {
+            provider.displayUserNotification(getStorageController().getCachedUser(to), message);
+        } else {
+            loadCachedUserThenCallback(to, new DisplayUserNotification(getPlugin(), to, message));
+        }
+    }
+
+    public void displayLoginNotification(UUID player) {
+        if (getStorageController().isLoaded(player)) {
+            provider.displayLoginNotification(getStorageController().getCachedUser(player));
+        } else {
+            loadCachedUserThenCallback(player, new DisplayLoginNotification(getPlugin(), player));
+        }
+    }
+
+    public void displayLogoutNotification(UUID player) {
+        if (getStorageController().isLoaded(player)) {
+            provider.displayLogoutNotification(getStorageController().getCachedUser(player));
+        } else {
+            loadCachedUserThenCallback(player, new DisplayLogoutNotification(getPlugin(), player));
+        }
+    }
+
+    private void loadCachedUserThenCallback(UUID uuid, Callback callback) {
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), uuid, callback));
     }
 
 

@@ -1,4 +1,4 @@
-package net.thisisz.hermes.bungee.asynctasks;
+package net.thisisz.hermes.bungee.asynctask;
 
 import net.thisisz.hermes.bungee.HermesChat;
 

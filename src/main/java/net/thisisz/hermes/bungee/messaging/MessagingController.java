@@ -25,8 +25,8 @@ public class MessagingController {
     }
 
     //Methods prefixed with display are returns from network controller system.
-    public void displayMessageLocal(UUID sender, String server, String message) {
-        this.localController.displayNewChatMessage(sender, server, message);
+    public void displayChatMessage(UUID sender, String server, String message) {
+        this.localController.displayChatMessage(sender, server, message);
     }
 
     public void displayUserNotification(UUID to, String message) {
@@ -37,7 +37,16 @@ public class MessagingController {
         this.localController.displayUserErrorMessage(to, message);
     }
 
-    //Methods prefixed with send new are sent out to network controller system, so that any information can be passed to other proxies in the network.
+    public void displayLoginNotification(UUID player) {
+        localController.displayLoginNotification(player);
+    }
+
+
+    public void displayLogoutNotification(UUID player) {
+        localController.displayLogoutNotification(player);
+    }
+
+    //Methods prefixed with send new are sent out to network controller system, so that any information can be passed to other bungee proxies via non local only messaging provider i.e. redisbungee
     public void sendNewNetworkChatMessage(ProxiedPlayer sender, Server server, String message) {
         networkController.sendNewNetworkChatMessage(sender, server, message);
     }
@@ -49,6 +58,5 @@ public class MessagingController {
     public void sendNewNotification(UUID to, String message) {
         networkController.sendNewUserNotification(to, message);
     }
-
 
 }

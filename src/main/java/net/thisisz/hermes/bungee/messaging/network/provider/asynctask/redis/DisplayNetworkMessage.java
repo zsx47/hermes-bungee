@@ -1,8 +1,8 @@
-package net.thisisz.hermes.bungee.messaging.network.provider.redis.task;
+package net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis;
 
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.network.provider.RedisBungeeProvider;
-import net.thisisz.hermes.bungee.messaging.network.provider.redis.object.NetworkMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkMessage;
 
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public class DisplayNetworkMessage implements Runnable {
 
     @Override
     public void run() {
-        provider.getNetworkController().displayMessageLocal(UUID.fromString(message.getSender()), message.getServer(), message.getMessage());
+        provider.getNetworkController().displayChatMessage(UUID.fromString(message.getSender()), message.getServer(), message.getMessage());
     }
 
 }

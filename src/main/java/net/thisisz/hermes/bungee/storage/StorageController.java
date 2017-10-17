@@ -55,20 +55,20 @@ public class StorageController {
         }
     }
 
-    public void loadNickname(CachedUser user) throws GenericControllerException {
+    public void loadNicknameAsync(CachedUser user) throws GenericControllerException {
         getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadNickname(user, getPlugin(), driver));
     }
 
-    public void loadNicknameInThread(CachedUser user) {
+    public void loadNickname(CachedUser user) {
         Runnable loadNick = new LoadNickname(user, getPlugin(), driver);
         loadNick.run();
     }
 
-    public void saveNickname(CachedUser user) throws GenericControllerException {
+    public void saveNicknameAsync(CachedUser user) throws GenericControllerException {
         getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SaveNickname(user, getPlugin(), driver));
     }
 
-    public void saveNicknameInThread(CachedUser user) {
+    public void saveNickname(CachedUser user) {
         Runnable saveNick = new SaveNickname(user, getPlugin(), driver);
         saveNick.run();
     }
@@ -97,6 +97,10 @@ public class StorageController {
         } else {
             userCache.put(uuid, new CachedUser(uuid, this, name));
         }
+    }
+
+    public boolean isLoaded(UUID uuid) {
+        return userCache.containsKey(uuid);
     }
 
     public CachedUser getCachedUser(UUID uuid) {

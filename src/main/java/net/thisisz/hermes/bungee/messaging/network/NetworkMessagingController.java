@@ -32,8 +32,8 @@ public class NetworkMessagingController {
         return controller.getPlugin();
     }
 
-    public void displayMessageLocal(UUID sender, String server, String message) {
-        controller.displayMessageLocal(sender, server, message);
+    public void displayChatMessage(UUID sender, String server, String message) {
+        controller.displayChatMessage(sender, server, message);
     }
 
     public void displayUserErrorMessage(UUID to, String message) {
@@ -42,6 +42,14 @@ public class NetworkMessagingController {
 
     public void displayUserNotification(UUID to, String message) {
         controller.displayUserNotification(to, message);
+    }
+
+    public void displayLoginNotification(UUID player) {
+        controller.displayLoginNotification(player);
+    }
+
+    public void displayLogoutNotification(UUID player) {
+        controller.displayLogoutNotification(player);
     }
 
     public void sendNewNetworkChatMessage(ProxiedPlayer sender, Server server, String message) {

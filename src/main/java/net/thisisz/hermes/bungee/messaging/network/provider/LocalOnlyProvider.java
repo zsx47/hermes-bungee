@@ -1,7 +1,15 @@
 package net.thisisz.hermes.bungee.messaging.network.provider;
 
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.HermesChat;
+import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.asynctask.SendLogoutNotification;
+import net.thisisz.hermes.bungee.callback.PlayerLoginNotification;
 import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
+import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLoginNotification;
+import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLogoutNotification;
 
 import java.util.UUID;
 
@@ -20,7 +28,7 @@ public class LocalOnlyProvider implements NetworkProvider {
 
     @Override
     public void sendNewNetworkChatMessage(UUID sender, String server, String message) {
-        networkController.displayMessageLocal(sender, server, message);
+        networkController.displayChatMessage(sender, server, message);
     }
 
     @Override
@@ -31,6 +39,21 @@ public class LocalOnlyProvider implements NetworkProvider {
     @Override
     public void sendNewUserErrorMessage(UUID to, String message) {
         networkController.displayUserErrorMessage(to, message);
+    }
+
+    @Override
+    public NetworkMessagingController getNetworkController() {
+        return networkController;
+    }
+
+    @EventHandler
+    public void onPlayerDisconnectEvent(PlayerDisconnectEvent event) {
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayLogoutNotification(this, event.getPlayer().getUniqueId()));
+    }
+
+    @EventHandler
+    public void onLoginEvent(PostLoginEvent event) {
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), event.getPlayer().getUniqueId(), new DisplayLoginNotification(this, event.getPlayer().getUniqueId())));
     }
 
 }

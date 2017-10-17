@@ -1,17 +1,17 @@
-package net.thisisz.hermes.bungee.messaging.network.provider.redis.task;
+package net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis;
 
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.network.provider.RedisBungeeProvider;
-import net.thisisz.hermes.bungee.messaging.network.provider.redis.object.NetworkNotification;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkErrorMessage;
 
 import java.util.UUID;
 
-public class DisplayNetworkNotification implements Runnable {
+public class DisplayNetworkErrorMessage implements Runnable {
 
-    private NetworkNotification message;
+    private NetworkErrorMessage message;
     private RedisBungeeProvider provider;
 
-    public DisplayNetworkNotification(NetworkNotification message, RedisBungeeProvider provider) {
+    public DisplayNetworkErrorMessage(NetworkErrorMessage message, RedisBungeeProvider provider) {
         this.message = message;
         this.provider = provider;
     }
@@ -23,7 +23,7 @@ public class DisplayNetworkNotification implements Runnable {
     @Override
     public void run() {
         if (getPlugin().getProxy().getPlayer(UUID.fromString(message.getReceiver())) != null) {
-            provider.getNetworkController().displayUserNotification(UUID.fromString(message.getReceiver()), message.getMessage());
+            provider.getNetworkController().displayUserErrorMessage(UUID.fromString(message.getReceiver()), message.getMessage());
         }
     }
 

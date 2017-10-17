@@ -27,6 +27,10 @@ public class CachedUser {
         updateUserData();
         if (isLocal()) {
             this.name = getPlugin().getProxy().getPlayer(this.uuid).getName();
+        } else {
+            if (getPlugin().getRedisBungeeAPI() != null) {
+                this.name = getPlugin().getRedisBungeeAPI().getNameFromUuid(this.uuid);
+            }
         }
     }
 
@@ -34,7 +38,7 @@ public class CachedUser {
         this.controller = controller;
         this.uuid = uuid;
         try {
-            this.controller.loadNicknameInThread(this);
+            this.controller.loadNickname(this);
         } catch (Exception e) {
             getPlugin().getLogger().warning("Failed to get nickname for uuid: " + getUUID().toString());
         }
@@ -79,7 +83,7 @@ public class CachedUser {
             }
         }
         try {
-            this.controller.saveNickname(this);
+            this.controller.saveNicknameAsync(this);
         } catch (GenericControllerException e) {
             controller.getPlugin().getLogger().warning("Failed to save nickname for user with uuid '" + uuid.toString() + "'!" );
         }
@@ -117,6 +121,9 @@ public class CachedUser {
     }
 
     public String getName() {
+        if (name == null) {
+            return "still loading for some reason";
+        }
         return name;
     }
 
@@ -132,4 +139,5 @@ public class CachedUser {
     public void setUserData(UserData udat) {
         this.userData = udat;
     }
+
 }

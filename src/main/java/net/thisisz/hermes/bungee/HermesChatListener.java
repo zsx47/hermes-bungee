@@ -6,8 +6,9 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.event.EventHandler;
-import net.thisisz.hermes.bungee.asynctasks.LoadPlayerThenCallback;
-import net.thisisz.hermes.bungee.callbacks.PlayerLoginNotification;
+import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.callback.PlayerLoginNotification;
+import net.thisisz.hermes.bungee.asynctask.SendLogoutNotification;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.tasks.SendChatMessage;
 
@@ -31,16 +32,6 @@ public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
             event.setCancelled(true);
             getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SendChatMessage(getPlugin(), (ProxiedPlayer) event.getSender(), (Server) event.getReceiver(), event.getMessage()));
         }
-    }
-
-    @EventHandler
-    public void onPlayerDisconnectEvent(PlayerDisconnectEvent event) {
-        getPlugin().getStorageController().unloadCachedPlayer(event.getPlayer().getUniqueId());
-    }
-
-    @EventHandler
-    public void onLoginEvent(PostLoginEvent event) {
-        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), event.getPlayer().getUniqueId(), new PlayerLoginNotification(getPlugin(), event.getPlayer().getUniqueId())));
     }
 
 

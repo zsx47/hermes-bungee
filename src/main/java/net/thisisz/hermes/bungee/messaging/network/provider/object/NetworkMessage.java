@@ -1,4 +1,4 @@
-package net.thisisz.hermes.bungee.messaging.network.provider.redis.object;
+package net.thisisz.hermes.bungee.messaging.network.provider.object;
 
 import java.util.UUID;
 
