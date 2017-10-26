@@ -15,9 +15,11 @@ import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.Dis
 import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkErrorMessage;
 import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkMessage;
 import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkNotification;
-import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkErrorMessage;
-import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkMessage;
-import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkNotification;
+import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.RemoteUpdateNickname;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.common.NetworkErrorMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.common.NetworkMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.common.NetworkNicknameUpdate;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.common.NetworkNotification;
 
 import java.util.UUID;
 
@@ -30,11 +32,19 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-chat-messages");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-notification");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-error-message");
+        getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-nickname-updates");
         getPlugin().getProxy().getPluginManager().registerListener(getPlugin(), this);
     }
 
     public HermesChat getPlugin() {
         return networkController.getPlugin();
+    }
+
+    @Override
+    public void sendNicknameUpdate(UUID uuid, String nickname) {
+        NetworkNicknameUpdate obj = new NetworkNicknameUpdate(uuid, nickname);
+        Gson gson = new Gson();
+        getPlugin().getRedisBungeeAPI().sendChannelMessage("network-nickname-updates", gson.toJson(obj));
     }
 
     public NetworkMessagingController getNetworkController() {
@@ -105,6 +115,10 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
             case "network-error-notification":
                 NetworkErrorMessage networkErrorMessage = gson.fromJson(event.getMessage(), NetworkErrorMessage.class);
                 getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkErrorMessage(networkErrorMessage, this));
+                break;
+            case "network-nickname-updates":
+                NetworkNicknameUpdate networkNicknameUpdate = gson.fromJson(event.getMessage(), NetworkNicknameUpdate.class);
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new RemoteUpdateNickname(networkNicknameUpdate, this));
                 break;
             default:
                 break;

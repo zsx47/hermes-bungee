@@ -2,7 +2,7 @@ package net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis;
 
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.network.provider.RedisBungeeProvider;
-import net.thisisz.hermes.bungee.messaging.network.provider.object.NetworkErrorMessage;
+import net.thisisz.hermes.bungee.messaging.network.provider.object.common.NetworkErrorMessage;
 
 import java.util.UUID;
 

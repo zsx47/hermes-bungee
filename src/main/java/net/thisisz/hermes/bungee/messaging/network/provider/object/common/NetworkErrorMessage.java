@@ -1,12 +1,12 @@
-package net.thisisz.hermes.bungee.messaging.network.provider.object;
+package net.thisisz.hermes.bungee.messaging.network.provider.object.common;
 
 import java.util.UUID;
 
-public class NetworkNotification {
+public class NetworkErrorMessage {
 
     public String receiver, message;
 
-    public NetworkNotification(UUID receiver, String message) {
+    public NetworkErrorMessage(UUID receiver, String message) {
         this.receiver = receiver.toString();
         this.message = message;
     }

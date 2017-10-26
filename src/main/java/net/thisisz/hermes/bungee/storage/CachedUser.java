@@ -82,6 +82,7 @@ public class CachedUser {
                 getPlugin().getProxy().getPlayer(this.uuid).setDisplayName(getPlugin().getProxy().getPlayer(uuid).getName());
             }
         }
+        getPlugin().getMessagingController().sendNicknameUpdate(uuid, nickname);
         try {
             this.controller.saveNicknameAsync(this);
         } catch (GenericControllerException e) {

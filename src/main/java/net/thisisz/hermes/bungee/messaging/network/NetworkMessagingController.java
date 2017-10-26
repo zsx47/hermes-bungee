@@ -65,4 +65,7 @@ public class NetworkMessagingController {
         provider.sendNewUserNotification(to, message);
     }
 
+    public void sendNicknameUpdate(UUID uuid, String nickname) {
+        provider.sendNicknameUpdate(uuid, nickname);
+    }
 }
