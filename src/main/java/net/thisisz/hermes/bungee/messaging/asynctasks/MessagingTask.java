@@ -1,4 +1,4 @@
-package net.thisisz.hermes.bungee.messaging.tasks;
+package net.thisisz.hermes.bungee.messaging.asynctasks;
 
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.messaging.MessagingController;

@@ -15,7 +15,5 @@ public class AsyncTask implements Runnable {
     }
 
     @Override
-    public void run() {
-        return;
-    }
+    public void run() {}
 }

@@ -22,6 +22,7 @@ public class NetworkMessagingController {
 
     private void setNetworkProvider() {
         if (getPlugin().getRedisBungeeAPI() == null) {
+            getPlugin().getProxy().getLogger().info("Using local only network message provider since no other api was found.");
             this.provider = new LocalOnlyProvider(this);
         } else {
             this.provider = new RedisBungeeProvider(this);
@@ -52,8 +53,8 @@ public class NetworkMessagingController {
         controller.displayLogoutNotification(player);
     }
 
-    public void sendNewNetworkChatMessage(ProxiedPlayer sender, Server server, String message) {
-        provider.sendNewNetworkChatMessage(sender.getUniqueId(), server.getInfo().getName(), message);
+    public void sendChatMessage(ProxiedPlayer sender, Server server, String message) {
+        provider.sendChatMessage(sender.getUniqueId(), server.getInfo().getName(), message);
     }
 
     public void sendNewUserErrorMessage(ProxiedPlayer to, String message) {

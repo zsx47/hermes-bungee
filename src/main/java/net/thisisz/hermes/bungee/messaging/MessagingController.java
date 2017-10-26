@@ -3,6 +3,7 @@ package net.thisisz.hermes.bungee.messaging;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.thisisz.hermes.bungee.HermesChat;
+import net.thisisz.hermes.bungee.messaging.filter.FilterManager;
 import net.thisisz.hermes.bungee.messaging.local.LocalMessagingController;
 import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
 
@@ -13,11 +14,13 @@ public class MessagingController {
     private HermesChat plugin;
     private LocalMessagingController localController;
     private NetworkMessagingController networkController;
+    private FilterManager filterManager;
 
     public MessagingController(HermesChat parent) {
         this.plugin = parent;
         this.localController = new LocalMessagingController(this);
         this.networkController = new NetworkMessagingController(this);
+        this.filterManager = new FilterManager(this);
     }
 
     public HermesChat getPlugin() {
@@ -47,8 +50,9 @@ public class MessagingController {
     }
 
     //Methods prefixed with send new are sent out to network controller system, so that any information can be passed to other bungee proxies via non local only messaging provider i.e. redisbungee
-    public void sendNewNetworkChatMessage(ProxiedPlayer sender, Server server, String message) {
-        networkController.sendNewNetworkChatMessage(sender, server, message);
+    public void sendChatMessage(ProxiedPlayer sender, Server server, String message) {
+        message = filterManager.filterMessage(message);
+        networkController.sendChatMessage(sender, server, message);
     }
 
     public void sendNewErrorMessage(ProxiedPlayer to, String message) {

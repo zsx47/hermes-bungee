@@ -5,13 +5,11 @@ import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
-import net.thisisz.hermes.bungee.messaging.tasks.SendChatMessage;
+import net.thisisz.hermes.bungee.messaging.asynctasks.SendChatMessage;
 
 public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
 
     private HermesChat plugin;
-    private LocalProvider provider;
-
 
     public HermesChatListener(HermesChat parent) {
         this.plugin = parent;
@@ -28,11 +26,5 @@ public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
             getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SendChatMessage(getPlugin(), (ProxiedPlayer) event.getSender(), (Server) event.getReceiver(), event.getMessage()));
         }
     }
-
-
-    public LocalProvider getProvider() {
-        return provider;
-    }
-
 
 }

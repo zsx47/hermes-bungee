@@ -42,7 +42,7 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
     }
 
     @Override
-    public void sendNewNetworkChatMessage(UUID sender, String server, String message) {
+    public void sendChatMessage(UUID sender, String server, String message) {
         NetworkMessage obj = new NetworkMessage(sender, server, message);
         Gson gson = new Gson();
         getPlugin().getRedisBungeeAPI().sendChannelMessage("network-chat-messages", gson.toJson(obj));
@@ -64,7 +64,6 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
 
     @EventHandler
     public void onPlayerJoinedNetworkEvent(PlayerJoinedNetworkEvent event) {
-        getPlugin().getProxy().getLogger().info(event.toString());
         displayPlayerLogin(event.getUuid());
     }
 

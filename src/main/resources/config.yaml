@@ -6,3 +6,7 @@ mysql_user: "user"
 mysql_pass: "pass"
 mysql_prefix: "oc_"
 debug: true
+filters:
+  test:
+    replace: "/test/"
+    with: "no-testing"

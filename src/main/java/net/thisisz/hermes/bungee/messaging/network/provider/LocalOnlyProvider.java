@@ -14,12 +14,13 @@ import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.Dis
 import java.util.UUID;
 
 //Network messaging provider that only uses a local provider of choice.
-public class LocalOnlyProvider implements NetworkProvider {
+public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.plugin.Listener {
 
     private NetworkMessagingController networkController;
 
     public LocalOnlyProvider(NetworkMessagingController parent) {
         this.networkController = parent;
+        getPlugin().getProxy().getPluginManager().registerListener(getPlugin(), this);
     }
 
     public HermesChat getPlugin() {
@@ -27,7 +28,7 @@ public class LocalOnlyProvider implements NetworkProvider {
     }
 
     @Override
-    public void sendNewNetworkChatMessage(UUID sender, String server, String message) {
+    public void sendChatMessage(UUID sender, String server, String message) {
         networkController.displayChatMessage(sender, server, message);
     }
 
@@ -52,7 +53,7 @@ public class LocalOnlyProvider implements NetworkProvider {
     }
 
     @EventHandler
-    public void onLoginEvent(PostLoginEvent event) {
+    public void onPostLoginEvent(PostLoginEvent event) {
         getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), event.getPlayer().getUniqueId(), new DisplayLoginNotification(this, event.getPlayer().getUniqueId())));
     }
 

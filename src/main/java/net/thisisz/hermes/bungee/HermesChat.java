@@ -35,12 +35,12 @@ public class HermesChat extends Plugin {
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
 
-        File file = new File(getDataFolder(), "config.yml");
+        File file = new File(getDataFolder(), "config.yaml");
 
         getLogger().info("Checking for config file.");
         if (!file.exists()) {
             getLogger().info("Creating default config file.");
-            try (InputStream in = getResourceAsStream("config.yml")) {
+            try (InputStream in = getResourceAsStream("config.yaml")) {
                 Files.copy(in, file.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,7 +49,7 @@ public class HermesChat extends Plugin {
 
         getLogger().info("Loading config.");
         try {
-            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
+            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yaml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +62,7 @@ public class HermesChat extends Plugin {
             this.luckApi = api.get();
             getLogger().info("Luck perms api loaded.");
         } else {
-            getLogger().warning("Ae chat failed to load Luck Perms api.");
+            getLogger().warning("hermes chat failed to load Luck Perms api.");
         }
 
         if (getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
@@ -106,6 +106,5 @@ public class HermesChat extends Plugin {
     }
 
     public RedisBungeeAPI getRedisBungeeAPI() { return redisBungeeAPI; }
-
 
 }

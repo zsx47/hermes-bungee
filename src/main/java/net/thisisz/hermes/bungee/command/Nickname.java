@@ -12,7 +12,7 @@ public class Nickname extends Command {
     private HermesChat plugin;
 
     public Nickname(HermesChat parent) {
-        super("nickname");
+        super("nickname", "hermes.nickname", "nick");
         this.plugin = parent;
     }
 

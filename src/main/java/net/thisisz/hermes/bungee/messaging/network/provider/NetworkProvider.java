@@ -8,7 +8,7 @@ import java.util.UUID;
 //Providers for network wide communication.
 public interface NetworkProvider {
 
-    void sendNewNetworkChatMessage(UUID sender, String server, String message);
+    void sendChatMessage(UUID sender, String server, String message);
 
     void sendNewUserNotification(UUID to, String message);
 

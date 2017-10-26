@@ -1,4 +1,4 @@
-package net.thisisz.hermes.bungee.messaging.tasks;
+package net.thisisz.hermes.bungee.messaging.asynctasks;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -19,6 +19,6 @@ public class SendChatMessage extends MessagingTask {
 
     @Override
     public void run() {
-        getMessagingController().sendNewNetworkChatMessage(this.sender, this.server, this.message);
+        getMessagingController().sendChatMessage(this.sender, this.server, this.message);
     }
 }
