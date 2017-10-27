@@ -19,4 +19,6 @@ public interface NetworkProvider {
     HermesChat getPlugin();
 
     void sendNicknameUpdate(UUID uuid, String nickname);
+
+    void sendLoginNotification(UUID uniqueId);
 }

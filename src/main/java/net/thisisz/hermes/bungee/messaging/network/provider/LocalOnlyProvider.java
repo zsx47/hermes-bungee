@@ -5,8 +5,6 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
-import net.thisisz.hermes.bungee.asynctask.SendLogoutNotification;
-import net.thisisz.hermes.bungee.callback.PlayerLoginNotification;
 import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
 import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLoginNotification;
 import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLogoutNotification;
@@ -30,6 +28,11 @@ public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.p
     @Override
     public void sendNicknameUpdate(UUID uuid, String nickname) {
 
+    }
+
+    @Override
+    public void sendLoginNotification(UUID uniqueId) {
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new  DisplayLoginNotification(this, uniqueId, false));
     }
 
     @Override

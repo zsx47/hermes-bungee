@@ -45,8 +45,8 @@ public class NetworkMessagingController {
         controller.displayUserNotification(to, message);
     }
 
-    public void displayLoginNotification(UUID player) {
-        controller.displayLoginNotification(player);
+    public void displayLoginNotification(UUID player, boolean vjoin) {
+        controller.displayLoginNotification(player, vjoin);
     }
 
     public void displayLogoutNotification(UUID player) {
@@ -67,5 +67,9 @@ public class NetworkMessagingController {
 
     public void sendNicknameUpdate(UUID uuid, String nickname) {
         provider.sendNicknameUpdate(uuid, nickname);
+    }
+
+    public void sendLoginNotification(ProxiedPlayer commandSender) {
+        provider.sendLoginNotification(commandSender.getUniqueId());
     }
 }

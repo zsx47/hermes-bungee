@@ -3,8 +3,6 @@ package net.thisisz.hermes.bungee.messaging.local.provider;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.thisisz.hermes.bungee.storage.CachedUser;
 
-import java.util.UUID;
-
 //Providers for communication on single bungee proxy level. Used by MessagingController as an interface for sending network wide messages to each local proxy or to only the local proxy with the LocalOnlyProvider network messaging provider.
 public interface LocalProvider {
 
@@ -14,7 +12,7 @@ public interface LocalProvider {
 
     void displayUserNotification(CachedUser to, String message);
 
-    void displayLoginNotification(CachedUser player);
+    void displayLoginNotification(CachedUser player, boolean vjoin);
 
     void displayLogoutNotification(CachedUser player);
 

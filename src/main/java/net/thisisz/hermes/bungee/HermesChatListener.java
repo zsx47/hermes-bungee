@@ -7,6 +7,8 @@ import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.asynctasks.SendChatMessage;
 
+import java.util.Objects;
+
 public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
 
     private HermesChat plugin;
@@ -23,7 +25,9 @@ public class HermesChatListener implements net.md_5.bungee.api.plugin.Listener {
     public void onChatEvent(ChatEvent event) {
         if (!event.isCommand() && event.getReceiver() instanceof Server && event.getSender() instanceof ProxiedPlayer) {
             event.setCancelled(true);
-            getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SendChatMessage(getPlugin(), (ProxiedPlayer) event.getSender(), (Server) event.getReceiver(), event.getMessage()));
+            if (!Objects.equals(event.getMessage(), "Connected with MineChat")) {
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SendChatMessage(getPlugin(), (ProxiedPlayer) event.getSender(), (Server) event.getReceiver(), event.getMessage()));
+            }
         }
     }
 

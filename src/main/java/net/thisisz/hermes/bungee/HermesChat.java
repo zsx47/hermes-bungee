@@ -9,6 +9,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.thisisz.hermes.bungee.command.Nickname;
+import net.thisisz.hermes.bungee.command.VanishedJoin;
 import net.thisisz.hermes.bungee.messaging.MessagingController;
 import net.thisisz.hermes.bungee.storage.StorageController;
 
@@ -62,7 +63,7 @@ public class HermesChat extends Plugin {
             this.luckApi = api.get();
             getLogger().info("Luck perms api loaded.");
         } else {
-            getLogger().warning("hermes chat failed to load Luck Perms api.");
+            getLogger().warning("Hermes chat failed to load Luck Perms api.");
         }
 
         if (getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
@@ -79,8 +80,9 @@ public class HermesChat extends Plugin {
 
         getLogger().info("Registering commands.");
         getProxy().getPluginManager().registerCommand(this, new Nickname(this));
+        getProxy().getPluginManager().registerCommand(this, new VanishedJoin(this));
 
-        getLogger().info("Ae chat loaded successfully!");
+        getLogger().info("Hermes chat loaded successfully!");
     }
 
     public Configuration getConfiguration() {

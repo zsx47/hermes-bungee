@@ -1,5 +1,8 @@
 package net.thisisz.hermes.bungee.messaging.local.provider;
 
+import me.lucko.luckperms.api.Contexts;
+import me.lucko.luckperms.api.caching.PermissionData;
+import me.lucko.luckperms.api.caching.UserData;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.ChatColor;
@@ -65,7 +68,13 @@ public class LocalBungeeProvider implements LocalProvider {
     }
 
     @Override
-    public void displayLoginNotification(CachedUser player) {
+    public void displayLoginNotification(CachedUser player, boolean vjoin) {
+        Boolean playervjoin;
+        if (vjoin) {
+            playervjoin = getUserPermission(player, "hermes.vanishjoin");
+        } else {
+            playervjoin = false;
+        }
         ComponentBuilder realName = new ComponentBuilder(player.getName());
         HoverEvent showRealName = new HoverEvent(HoverEvent.Action.SHOW_TEXT, realName.create());
         ComponentBuilder playerName = new ComponentBuilder(translateCodes(player.getDisplayName()));
@@ -74,13 +83,23 @@ public class LocalBungeeProvider implements LocalProvider {
         ComponentBuilder finalMessage = new ComponentBuilder("");
         finalMessage = finalMessage.append(new ComponentBuilder(translateCodes("&ePlayer ")).create()).append(playerPrefix.create())
                 .append(playerName.create()).append(new ComponentBuilder(translateCodes(" &ehas logged on")).create());
+        ComponentBuilder finalMessageVjoinSee = new ComponentBuilder("");
+        finalMessageVjoinSee = finalMessageVjoinSee.append(new ComponentBuilder(translateCodes("&bPlayer ")).create()).append(playerPrefix.create())
+                .append(playerName.create()).append(new ComponentBuilder(translateCodes(" &bhas joined silently")).create());
         for (ProxiedPlayer proxyPlayer : getPlugin().getProxy().getPlayers()) {
-            proxyPlayer.sendMessage(finalMessage.create());
+            if (playervjoin) {
+                if (proxyPlayer.hasPermission("hermes.vanishjoin.see")) {
+                    proxyPlayer.sendMessage(finalMessageVjoinSee.create());
+                }
+            } else {
+                proxyPlayer.sendMessage(finalMessage.create());
+            }
         }
     }
 
     @Override
     public void displayLogoutNotification(CachedUser player) {
+        Boolean vjoin = getUserPermission(player, "hermes.vanishjoin");
         ComponentBuilder realName = new ComponentBuilder(player.getName());
         HoverEvent showRealName = new HoverEvent(HoverEvent.Action.SHOW_TEXT, realName.create());
         ComponentBuilder playerName = new ComponentBuilder(translateCodes(player.getDisplayName()));
@@ -90,8 +109,28 @@ public class LocalBungeeProvider implements LocalProvider {
         finalMessage = finalMessage.append(new ComponentBuilder(translateCodes("&ePlayer ")).create()).append(playerPrefix.create())
                 .append(playerName.create()).append(new ComponentBuilder(translateCodes(" &ehas logged off")).create());
         for (ProxiedPlayer proxyPlayer : getPlugin().getProxy().getPlayers()) {
-            proxyPlayer.sendMessage(finalMessage.create());
+            if (vjoin) {
+                 if (proxyPlayer.hasPermission("hermes.vanishjoin.see")) {
+                     proxyPlayer.sendMessage(finalMessage.create());
+                 }
+            } else {
+                proxyPlayer.sendMessage(finalMessage.create());
+            }
         }
+    }
+
+    private boolean getUserPermission(CachedUser user, String permission) {
+        UUID luckUUID = getPlugin().getLuckApi().getUuidCache().getUUID(user.getUUID());
+        UserData udat;
+        try {
+            udat = getPlugin().getLuckApi().getUser(luckUUID).getCachedData();
+        } catch (NullPointerException e) {
+            getPlugin().getLuckApi().getStorage().loadUser(luckUUID).join();
+            udat = getPlugin().getLuckApi().getUser(luckUUID).getCachedData();
+            getPlugin().getLuckApi().cleanupUser(getPlugin().getLuckApi().getUser(luckUUID));
+        }
+        PermissionData pdat = udat.getPermissionData(Contexts.global());
+        return pdat.getPermissionValue(permission).asBoolean();
     }
 
     private String translateCodes(String string) {

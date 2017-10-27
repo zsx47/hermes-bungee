@@ -9,15 +9,17 @@ public class DisplayLoginNotification implements Callback {
 
     private UUID player;
     private HermesChat plugin;
+    private boolean vjoin;
 
-    public DisplayLoginNotification(HermesChat plugin, UUID player) {
+    public DisplayLoginNotification(HermesChat plugin, UUID player, boolean vjoin) {
         this.plugin = plugin;
         this.player = player;
+        this.vjoin = vjoin;
     }
 
     @Override
     public void run() {
-        getPlugin().getMessagingController().displayLoginNotification(player);
+        getPlugin().getMessagingController().displayLoginNotification(player, vjoin);
     }
 
     @Override

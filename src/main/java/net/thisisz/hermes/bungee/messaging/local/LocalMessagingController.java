@@ -59,11 +59,11 @@ public class LocalMessagingController {
         }
     }
 
-    public void displayLoginNotification(UUID player) {
+    public void displayLoginNotification(UUID player, boolean vjoin) {
         if (getStorageController().isLoaded(player)) {
-            provider.displayLoginNotification(getStorageController().getCachedUser(player));
+            provider.displayLoginNotification(getStorageController().getCachedUser(player), vjoin);
         } else {
-            loadCachedUserThenCallback(player, new DisplayLoginNotification(getPlugin(), player));
+            loadCachedUserThenCallback(player, new DisplayLoginNotification(getPlugin(), player, vjoin));
         }
     }
 

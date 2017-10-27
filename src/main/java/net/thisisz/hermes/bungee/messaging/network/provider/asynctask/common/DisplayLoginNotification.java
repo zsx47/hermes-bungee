@@ -10,10 +10,18 @@ public class DisplayLoginNotification implements Runnable, Callback {
 
     private NetworkProvider provider;
     private UUID player;
+    private boolean vjoin;
 
     public DisplayLoginNotification(NetworkProvider provider, UUID player) {
         this.provider = provider;
         this.player = player;
+        this.vjoin = true;
+    }
+
+    public DisplayLoginNotification(NetworkProvider provider, UUID player, boolean vjoin) {
+        this.provider = provider;
+        this.player = player;
+        this.vjoin = vjoin;
     }
 
     public HermesChat getPlugin() {
@@ -22,7 +30,7 @@ public class DisplayLoginNotification implements Runnable, Callback {
 
     @Override
     public void run() {
-        provider.getNetworkController().displayLoginNotification(player);
+        provider.getNetworkController().displayLoginNotification(player, vjoin);
     }
 
 }

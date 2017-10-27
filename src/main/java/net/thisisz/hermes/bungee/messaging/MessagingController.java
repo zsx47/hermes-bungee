@@ -40,8 +40,8 @@ public class MessagingController {
         this.localController.displayUserErrorMessage(to, message);
     }
 
-    public void displayLoginNotification(UUID player) {
-        localController.displayLoginNotification(player);
+    public void displayLoginNotification(UUID player, boolean vjoin) {
+        localController.displayLoginNotification(player, vjoin);
     }
 
 
@@ -65,5 +65,9 @@ public class MessagingController {
 
     public void sendNicknameUpdate(UUID uuid, String nickname) {
         networkController.sendNicknameUpdate(uuid, nickname);
+    }
+
+    public void sendLoginNotification(ProxiedPlayer commandSender) {
+        networkController.sendLoginNotification(commandSender);
     }
 }
