@@ -15,6 +15,7 @@ public class CachedUser {
     private String nickname;
     private String name;
     private UserData userData;
+    private boolean vanished = false;
 
     public CachedUser(UUID uuid, StorageController controller) {
         this.controller = controller;
@@ -128,7 +129,15 @@ public class CachedUser {
         return name;
     }
 
-    private void updateUserData() {
+    public void setVanished() {
+        vanished = true;
+    }
+
+    public void setUnvanishd() {
+        vanished = false;
+    }
+
+    public void updateUserData() {
         getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPrefix(this));
     }
 

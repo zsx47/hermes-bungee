@@ -36,6 +36,16 @@ public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.p
     }
 
     @Override
+    public void sendUserVanishStatus(UUID uuid, boolean status) {
+
+    }
+
+    @Override
+    public void sendStaffChatMessage(UUID sender, String server, String message) {
+        networkController.displayStaffChatMessage(sender, server, message);
+    }
+
+    @Override
     public void sendChatMessage(UUID sender, String server, String message) {
         networkController.displayChatMessage(sender, server, message);
     }

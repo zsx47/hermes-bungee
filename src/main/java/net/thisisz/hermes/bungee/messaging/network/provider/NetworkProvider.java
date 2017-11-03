@@ -21,4 +21,8 @@ public interface NetworkProvider {
     void sendNicknameUpdate(UUID uuid, String nickname);
 
     void sendLoginNotification(UUID uniqueId);
+
+    void sendUserVanishStatus(UUID uuid, boolean status);
+
+    void sendStaffChatMessage(UUID sender, String server, String message);
 }

@@ -8,6 +8,8 @@ public interface LocalProvider {
 
     void displayChatMessage(CachedUser player, ServerInfo server, String message);
 
+    void displayStaffChatMessage(CachedUser player, ServerInfo server, String message);
+
     void displayUserErrorMessage(CachedUser to, String message);
 
     void displayUserNotification(CachedUser to, String message);

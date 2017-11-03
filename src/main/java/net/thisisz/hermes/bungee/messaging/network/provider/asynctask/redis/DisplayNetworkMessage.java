@@ -10,10 +10,12 @@ public class DisplayNetworkMessage implements Runnable {
 
     private NetworkMessage message;
     private RedisBungeeProvider provider;
+    private boolean staff;
 
-    public DisplayNetworkMessage(NetworkMessage message, RedisBungeeProvider provider) {
+    public DisplayNetworkMessage(NetworkMessage message, RedisBungeeProvider provider, boolean staff) {
         this.message = message;
         this.provider = provider;
+        this.staff = staff;
     }
 
     public HermesChat getPlugin() {
@@ -22,7 +24,11 @@ public class DisplayNetworkMessage implements Runnable {
 
     @Override
     public void run() {
-        provider.getNetworkController().displayChatMessage(UUID.fromString(message.getSender()), message.getServer(), message.getMessage());
+        if (staff) {
+            provider.getNetworkController().displayStaffChatMessage(UUID.fromString(message.getSender()), message.getServer(), message.getMessage());
+        } else {
+            provider.getNetworkController().displayChatMessage(UUID.fromString(message.getSender()), message.getServer(), message.getMessage());
+        }
     }
 
 }

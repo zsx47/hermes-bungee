@@ -72,4 +72,16 @@ public class NetworkMessagingController {
     public void sendLoginNotification(ProxiedPlayer commandSender) {
         provider.sendLoginNotification(commandSender.getUniqueId());
     }
+
+    public void sendUserVanishStatus(UUID uuid, boolean status) {
+        provider.sendUserVanishStatus(uuid, status);
+    }
+
+    public void sendStaffChatMessage(ProxiedPlayer sender, Server server, String message) {
+        provider.sendStaffChatMessage(sender.getUniqueId(), server.getInfo().getName(), message);
+    }
+
+    public void displayStaffChatMessage(UUID sender, String server, String message) {
+        controller.displayStaffChatMessage(sender, server, message);
+    }
 }

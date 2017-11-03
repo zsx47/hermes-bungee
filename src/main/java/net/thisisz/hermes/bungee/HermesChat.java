@@ -9,6 +9,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.thisisz.hermes.bungee.command.Nickname;
+import net.thisisz.hermes.bungee.command.StaffChat;
 import net.thisisz.hermes.bungee.command.VanishedJoin;
 import net.thisisz.hermes.bungee.messaging.MessagingController;
 import net.thisisz.hermes.bungee.storage.StorageController;
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class HermesChat extends Plugin {
 
     private Configuration configuration;
-    private HermesChatListener listener;
+    private HermesListener listener;
     private LuckPermsApi luckApi;
     private StorageController storageController;
     private MessagingController messagingController;
@@ -74,13 +75,14 @@ public class HermesChat extends Plugin {
         this.messagingController = new MessagingController(this);
 
         getLogger().info("Setting up chat listener.");
-        this.listener = new HermesChatListener(this);
+        this.listener = new HermesListener(this);
 
         getProxy().getPluginManager().registerListener(this, listener);
 
         getLogger().info("Registering commands.");
         getProxy().getPluginManager().registerCommand(this, new Nickname(this));
         getProxy().getPluginManager().registerCommand(this, new VanishedJoin(this));
+        getProxy().getPluginManager().registerCommand(this, new StaffChat(this));
 
         getLogger().info("Hermes chat loaded successfully!");
     }
@@ -89,7 +91,7 @@ public class HermesChat extends Plugin {
         return configuration;
     }
 
-    public HermesChatListener getListener() {
+    public HermesListener getListener() {
         return listener;
     }
 

@@ -70,4 +70,16 @@ public class MessagingController {
     public void sendLoginNotification(ProxiedPlayer commandSender) {
         networkController.sendLoginNotification(commandSender);
     }
+
+    public void sendUserVanishStatus(UUID uuid, boolean status) {
+        networkController.sendUserVanishStatus(uuid, status);
+    }
+
+    public void sendStaffChatMessage(ProxiedPlayer sender, Server server, String message) {
+        networkController.sendStaffChatMessage(sender, server, message);
+    }
+
+    public void displayStaffChatMessage(UUID sender, String server, String message) {
+        localController.displayStaffChatMessage(sender, server, message);
+    }
 }

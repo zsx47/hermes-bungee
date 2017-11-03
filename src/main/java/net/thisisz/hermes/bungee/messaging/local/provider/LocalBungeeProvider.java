@@ -41,6 +41,14 @@ public class LocalBungeeProvider implements LocalProvider {
 
     @Override
     public void displayChatMessage(CachedUser player, ServerInfo server, String message) {
+        displayChat(player, server, message, false);
+    }
+
+    public void displayStaffChatMessage(CachedUser player, ServerInfo server, String message) {
+        displayChat(player, server, message, true);
+    }
+
+    private void displayChat(CachedUser player, ServerInfo server, String message, boolean staff) {
         ComponentBuilder serverName = new ComponentBuilder(server.getName());
         ComponentBuilder playerName = new ComponentBuilder(translateCodes(player.getDisplayName()));
         ComponentBuilder realName = new ComponentBuilder(player.getName());
@@ -52,7 +60,17 @@ public class LocalBungeeProvider implements LocalProvider {
                 .append(serverName.color(ChatColor.GREEN).create()).append(bracketR.color(ChatColor.DARK_GREEN).create()).append(spaceComp.create())
                 .append(playerPrefix.create()).append(playerName.create()).append(spaceComp.create()).append(carrotR.create())
                 .append(colon.create()).append(spaceComp.create()).append(translateCodes(message));
-        getPlugin().getProxy().broadcast(finalMessage.create());
+        if (staff) {
+            ComponentBuilder staffMessage = new ComponentBuilder(translateCodes("&a[&3StaffChat&a]"));
+            staffMessage = staffMessage.append(finalMessage.create());
+            for (ProxiedPlayer proxyPlayer : getPlugin().getProxy().getPlayers()) {
+                if (proxyPlayer.hasPermission("hermes.staffchat")) {
+                    proxyPlayer.sendMessage(staffMessage.create());
+                }
+            }
+        } else {
+            getPlugin().getProxy().broadcast(finalMessage.create());
+        }
     }
 
     @Override

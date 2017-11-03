@@ -1,5 +1,6 @@
 package net.thisisz.hermes.bungee.messaging.local;
 
+import net.md_5.bungee.api.connection.Server;
 import net.thisisz.hermes.bungee.HermesChat;
 import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
 import net.thisisz.hermes.bungee.callback.Callback;
@@ -80,4 +81,11 @@ public class LocalMessagingController {
     }
 
 
+    public void displayStaffChatMessage(UUID sender, String server, String message) {
+        if (getStorageController().isLoaded(sender)) {
+            provider.displayStaffChatMessage(getStorageController().getCachedUser(sender), getPlugin().getProxy().getServerInfo(server), message);
+        } else {
+            loadCachedUserThenCallback(sender, new DisplayStaffChatMessage(getPlugin(), sender, server, message));
+        }
+    }
 }

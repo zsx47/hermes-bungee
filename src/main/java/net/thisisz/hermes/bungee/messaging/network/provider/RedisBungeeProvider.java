@@ -31,6 +31,7 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-error-message");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-nickname-updates");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-login-notification");
+        getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-staff-chat-messages");
         getPlugin().getProxy().getPluginManager().registerListener(getPlugin(), this);
     }
 
@@ -50,6 +51,18 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         NetworkLoginNotification obj = new NetworkLoginNotification(uniqueId);
         Gson gson = new Gson();
         getPlugin().getRedisBungeeAPI().sendChannelMessage("network-login-notification", gson.toJson(obj));
+    }
+
+    @Override
+    public void sendUserVanishStatus(UUID uuid, boolean status) {
+
+    }
+
+    @Override
+    public void sendStaffChatMessage(UUID sender, String server, String message) {
+        NetworkMessage obj = new NetworkMessage(sender, server, message);
+        Gson gson = new Gson();
+        getPlugin().getRedisBungeeAPI().sendChannelMessage("network-staff-chat-messages", gson.toJson(obj));
     }
 
     public NetworkMessagingController getNetworkController() {
@@ -111,7 +124,7 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         switch (event.getChannel()) {
             case "network-chat-messages":
                 NetworkMessage networkMessage = gson.fromJson(event.getMessage(), NetworkMessage.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkMessage, this));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkMessage, this, false));
                 break;
             case "network-notification":
                 NetworkNotification networkNotification = gson.fromJson(event.getMessage(), NetworkNotification.class);
@@ -128,6 +141,10 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
             case "network-login-notification":
                 NetworkLoginNotification networkLoginNotification = gson.fromJson(event.getMessage(), NetworkLoginNotification.class);
                 getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayLoginNotification(this, networkLoginNotification.getUser(), false));
+                break;
+            case "network-staff-chat-messages":
+                NetworkMessage networkStaffMessage = gson.fromJson(event.getMessage(), NetworkMessage.class);
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkStaffMessage, this, true));
                 break;
             default:
                 break;
