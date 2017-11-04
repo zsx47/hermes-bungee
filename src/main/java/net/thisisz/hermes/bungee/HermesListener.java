@@ -11,6 +11,8 @@ import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
 import net.thisisz.hermes.bungee.messaging.asynctasks.SendChatMessage;
 import net.thisisz.hermes.bungee.storage.CachedUser;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,11 +29,17 @@ public class HermesListener implements net.md_5.bungee.api.plugin.Listener {
     }
 
     @EventHandler
-    public void onChatEvent(ChatEvent event) {
-        if (!event.isCommand() && event.getReceiver() instanceof Server && event.getSender() instanceof ProxiedPlayer) {
-            event.setCancelled(true);
-            if (!Objects.equals(event.getMessage(), "Connected with MineChat")) {
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new SendChatMessage(getPlugin(), (ProxiedPlayer) event.getSender(), (Server) event.getReceiver(), event.getMessage()));
+    public void onChatEvent(PluginMessageEvent event) {
+        if (event.getTag().equalsIgnoreCase("BungeeCord")) {
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()));
+            try {
+                String channel = in.readUTF();
+                if (channel.equals("HermesChatMessage")) {
+                    String message = in.readUTF();
+                    getPlugin().getMessagingController().sendChatMessage((ProxiedPlayer) event.getReceiver(), getPlugin().getProxy().getPlayer(event.getReceiver().toString()).getServer(), message);
+                }
+            } catch (Exception e) {
+                getPlugin().getLogger().info("failed to read plugin message event.");
             }
         }
     }
