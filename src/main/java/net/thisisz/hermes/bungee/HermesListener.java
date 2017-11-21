@@ -2,18 +2,12 @@ package net.thisisz.hermes.bungee;
 
 import me.lucko.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.md_5.bungee.api.event.TargetedEvent;
 import net.md_5.bungee.event.EventHandler;
-import net.thisisz.hermes.bungee.messaging.local.provider.LocalProvider;
-import net.thisisz.hermes.bungee.messaging.asynctasks.SendChatMessage;
 import net.thisisz.hermes.bungee.storage.CachedUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.util.Objects;
 import java.util.UUID;
 
 public class HermesListener implements net.md_5.bungee.api.plugin.Listener {

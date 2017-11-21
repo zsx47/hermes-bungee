@@ -1,7 +1,7 @@
-package net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common;
+package net.thisisz.hermes.bungee.messaging.network.asynctask.common;
 
+import net.thisisz.hermes.bungee.Callback;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.callback.Callback;
 import net.thisisz.hermes.bungee.messaging.network.provider.NetworkProvider;
 
 import java.util.UUID;
@@ -16,13 +16,13 @@ public class DisplayLogoutNotification implements Runnable, Callback {
         this.player = player;
     }
 
-    public HermesChat getPlugin() {
-        return provider.getPlugin();
+    private HermesChat getPlugin() {
+        return HermesChat.getPlugin();
     }
 
     @Override
     public void run() {
-        provider.getNetworkController().displayLogoutNotification(player);
+        getPlugin().getMessagingController().displayLogoutNotification(player);
     }
 
 }

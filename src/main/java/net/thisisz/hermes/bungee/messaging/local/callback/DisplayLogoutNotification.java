@@ -1,17 +1,15 @@
 package net.thisisz.hermes.bungee.messaging.local.callback;
 
+import net.thisisz.hermes.bungee.Callback;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.callback.Callback;
 
 import java.util.UUID;
 
 public class DisplayLogoutNotification implements Callback {
 
     private UUID player;
-    private HermesChat plugin;
 
-    public DisplayLogoutNotification(HermesChat plugin, UUID player) {
-        this.plugin = plugin;
+    public DisplayLogoutNotification(UUID player) {
         this.player = player;
     }
 
@@ -20,9 +18,8 @@ public class DisplayLogoutNotification implements Callback {
         getPlugin().getMessagingController().displayLogoutNotification(player);
     }
 
-    @Override
-    public HermesChat getPlugin() {
-        return plugin;
+    private HermesChat getPlugin() {
+        return HermesChat.getPlugin();
     }
 
 }

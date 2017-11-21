@@ -9,14 +9,14 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.messaging.local.LocalMessagingController;
+import net.thisisz.hermes.bungee.messaging.MessagingController;
 import net.thisisz.hermes.bungee.storage.CachedUser;
 
 import java.util.UUID;
 
 public class LocalBungeeProvider implements LocalProvider {
 
-    private LocalMessagingController localController;
+    private MessagingController controller;
     private ComponentBuilder bracketL;
     private ComponentBuilder bracketR;
     private ComponentBuilder colon;
@@ -25,8 +25,8 @@ public class LocalBungeeProvider implements LocalProvider {
     private ComponentBuilder spaceComp;
 
 
-    public LocalBungeeProvider(LocalMessagingController parent) {
-        this.localController = parent;
+    public LocalBungeeProvider(MessagingController parent) {
+        this.controller = parent;
         this.bracketL = new ComponentBuilder("[").color(ChatColor.WHITE);
         this.bracketR = new ComponentBuilder("]").color(ChatColor.WHITE);
         this.colon = new ComponentBuilder(":").color(ChatColor.WHITE);
@@ -35,8 +35,8 @@ public class LocalBungeeProvider implements LocalProvider {
         this.spaceComp = new ComponentBuilder(" ");
     }
 
-    public HermesChat getPlugin() {
-        return localController.getPlugin();
+    private HermesChat getPlugin() {
+        return HermesChat.getPlugin();
     }
 
     @Override

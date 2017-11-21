@@ -6,6 +6,6 @@ public class GenericDriverException extends GenericStorageException {
 
     public GenericDriverException(String message) {
         super(message);
-
     }
+    
 }

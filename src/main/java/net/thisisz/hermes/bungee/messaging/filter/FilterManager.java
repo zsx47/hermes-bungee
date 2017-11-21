@@ -23,8 +23,8 @@ public class FilterManager {
         loadDefaultFilter();
     }
 
-    public HermesChat getPlugin() {
-        return controller.getPlugin();
+    private HermesChat getPlugin() {
+        return HermesChat.getPlugin();
     }
 
     private void loadDefaultFilter() {

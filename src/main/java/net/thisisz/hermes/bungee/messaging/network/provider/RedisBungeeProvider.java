@@ -8,24 +8,24 @@ import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
-import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLoginNotification;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLogoutNotification;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkErrorMessage;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkMessage;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.DisplayNetworkNotification;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.redis.RemoteUpdateNickname;
-import net.thisisz.hermes.bungee.messaging.network.provider.object.common.*;
+import net.thisisz.hermes.bungee.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.messaging.MessagingController;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.common.DisplayLoginNotification;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.common.DisplayLogoutNotification;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.redis.DisplayNetworkErrorMessage;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.redis.DisplayNetworkMessage;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.redis.DisplayNetworkNotification;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.redis.RemoteUpdateNickname;
+import net.thisisz.hermes.bungee.messaging.network.object.*;
 
 import java.util.UUID;
 
 public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api.plugin.Listener {
 
-    private NetworkMessagingController networkController;
+    private MessagingController controller;
 
-    public RedisBungeeProvider(NetworkMessagingController parent) {
-        this.networkController = parent;
+    public RedisBungeeProvider(MessagingController parent) {
+        this.controller = parent;
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-chat-messages");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-notification");
         getPlugin().getRedisBungeeAPI().registerPubSubChannels("network-error-message");
@@ -36,7 +36,7 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
     }
 
     public HermesChat getPlugin() {
-        return networkController.getPlugin();
+        return HermesChat.getPlugin();
     }
 
     @Override
@@ -63,10 +63,6 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         NetworkMessage obj = new NetworkMessage(sender, server, message);
         Gson gson = new Gson();
         getPlugin().getRedisBungeeAPI().sendChannelMessage("network-staff-chat-messages", gson.toJson(obj));
-    }
-
-    public NetworkMessagingController getNetworkController() {
-        return networkController;
     }
 
     @Override
@@ -101,8 +97,9 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
     }
 
     private void displayPlayerLogin(UUID player) {
-        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), player, new DisplayLoginNotification(this, player)));
+        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(player, new DisplayLoginNotification(player)));    
     }
+    
 
     @EventHandler
     public void onPlayerLeftNetworkEvent(PlayerLeftNetworkEvent event) {
@@ -124,27 +121,27 @@ public class RedisBungeeProvider implements NetworkProvider, net.md_5.bungee.api
         switch (event.getChannel()) {
             case "network-chat-messages":
                 NetworkMessage networkMessage = gson.fromJson(event.getMessage(), NetworkMessage.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkMessage, this, false));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkMessage, false));
                 break;
             case "network-notification":
                 NetworkNotification networkNotification = gson.fromJson(event.getMessage(), NetworkNotification.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkNotification(networkNotification, this));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkNotification(networkNotification));
                 break;
             case "network-error-notification":
                 NetworkErrorMessage networkErrorMessage = gson.fromJson(event.getMessage(), NetworkErrorMessage.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkErrorMessage(networkErrorMessage, this));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkErrorMessage(networkErrorMessage));
                 break;
             case "network-nickname-updates":
                 NetworkNicknameUpdate networkNicknameUpdate = gson.fromJson(event.getMessage(), NetworkNicknameUpdate.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new RemoteUpdateNickname(networkNicknameUpdate, this));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new RemoteUpdateNickname(networkNicknameUpdate));
                 break;
             case "network-login-notification":
                 NetworkLoginNotification networkLoginNotification = gson.fromJson(event.getMessage(), NetworkLoginNotification.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayLoginNotification(this, networkLoginNotification.getUser(), false));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayLoginNotification(networkLoginNotification.getUser(), false));
                 break;
             case "network-staff-chat-messages":
                 NetworkMessage networkStaffMessage = gson.fromJson(event.getMessage(), NetworkMessage.class);
-                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkStaffMessage, this, true));
+                getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new DisplayNetworkMessage(networkStaffMessage, true));
                 break;
             default:
                 break;

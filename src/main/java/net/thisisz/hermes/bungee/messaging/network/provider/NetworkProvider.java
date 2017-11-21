@@ -1,7 +1,6 @@
 package net.thisisz.hermes.bungee.messaging.network.provider;
 
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
 
 import java.util.UUID;
 
@@ -13,10 +12,6 @@ public interface NetworkProvider {
     void sendNewUserNotification(UUID to, String message);
 
     void sendNewUserErrorMessage(UUID to, String message);
-
-    NetworkMessagingController getNetworkController();
-
-    HermesChat getPlugin();
 
     void sendNicknameUpdate(UUID uuid, String nickname);
 

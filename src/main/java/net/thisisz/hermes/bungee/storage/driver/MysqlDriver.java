@@ -132,7 +132,7 @@ public class MysqlDriver implements StorageDriver {
     //Create table if it does not exist and throw MysqlFatalException upon any error
     private void createTablesIfNotExists() throws MysqlFatalException {
         try {
-            int i = executeUpdate("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "nicknames` (uuid varchar(36) not null primary key, nickname varchar(200) null, UNIQUE (uuid));");
+            executeUpdate("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "nicknames` (uuid varchar(36) not null primary key, nickname varchar(200) null, UNIQUE (uuid));");
         } catch (Exception e) {
             if (getPlugin().DebugMode()) {
                 e.printStackTrace();
@@ -209,7 +209,7 @@ public class MysqlDriver implements StorageDriver {
             PreparedStatement pstmt = getNewPreparedStatement("INSERT INTO " + tablePrefix + "nicknames (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=VALUES(nickname);");
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, nickname);
-            int i = pstmt.executeUpdate();
+            pstmt.executeUpdate();
         } catch (Exception e) {
             throw new MysqlFatalException("Failed to set nickname for uuid '" + uuid.toString() + "'.");
         }

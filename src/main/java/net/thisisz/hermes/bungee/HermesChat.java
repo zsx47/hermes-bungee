@@ -28,11 +28,13 @@ public class HermesChat extends Plugin {
     private StorageController storageController;
     private MessagingController messagingController;
     private RedisBungeeAPI redisBungeeAPI;
+    private static HermesChat instance;
 
     @Override
     public void onEnable() {
         // You should not put an enable message in your plugin.
         // BungeeCord already does so
+    	instance = this;
 
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
@@ -72,7 +74,7 @@ public class HermesChat extends Plugin {
         }
 
         getLogger().info("Setting up messaging system");
-        this.messagingController = new MessagingController(this);
+        this.messagingController = new MessagingController();
 
         getLogger().info("Setting up chat listener.");
         this.listener = new HermesListener(this);
@@ -110,5 +112,9 @@ public class HermesChat extends Plugin {
     }
 
     public RedisBungeeAPI getRedisBungeeAPI() { return redisBungeeAPI; }
-
+    
+    public static HermesChat getPlugin() {
+    	return instance;
+    }
+    
 }

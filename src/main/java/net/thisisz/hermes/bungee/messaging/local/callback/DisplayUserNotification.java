@@ -1,7 +1,7 @@
 package net.thisisz.hermes.bungee.messaging.local.callback;
 
+import net.thisisz.hermes.bungee.Callback;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.callback.Callback;
 
 import java.util.UUID;
 
@@ -9,10 +9,8 @@ public class DisplayUserNotification implements Callback {
 
     private String message;
     private UUID to;
-    private HermesChat plugin;
 
-    public DisplayUserNotification(HermesChat plugin, UUID to, String message) {
-        this.plugin = plugin;
+    public DisplayUserNotification(UUID to, String message) {
         this.to = to;
         this.message = message;
     }
@@ -22,8 +20,9 @@ public class DisplayUserNotification implements Callback {
         getPlugin().getMessagingController().displayUserNotification(to, message);
     }
 
-    @Override
-    public HermesChat getPlugin() {
-        return plugin;
+
+    private HermesChat getPlugin() {
+        return HermesChat.getPlugin();
     }
+    
 }

@@ -4,35 +4,34 @@ import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.event.EventHandler;
 import net.thisisz.hermes.bungee.HermesChat;
-import net.thisisz.hermes.bungee.asynctask.LoadPlayerThenCallback;
-import net.thisisz.hermes.bungee.messaging.network.NetworkMessagingController;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLoginNotification;
-import net.thisisz.hermes.bungee.messaging.network.provider.asynctask.common.DisplayLogoutNotification;
+import net.thisisz.hermes.bungee.LoadPlayerThenCallback;
+import net.thisisz.hermes.bungee.messaging.MessagingController;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.common.DisplayLoginNotification;
+import net.thisisz.hermes.bungee.messaging.network.asynctask.common.DisplayLogoutNotification;
 
 import java.util.UUID;
 
 //Network messaging provider that only uses a local provider of choice.
 public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.plugin.Listener {
 
-    private NetworkMessagingController networkController;
+    private MessagingController controller;
 
-    public LocalOnlyProvider(NetworkMessagingController parent) {
-        this.networkController = parent;
-        getPlugin().getProxy().getPluginManager().registerListener(getPlugin(), this);
+    public LocalOnlyProvider(MessagingController parent) {
+        this.controller = parent;
+        HermesChat.getPlugin().getProxy().getPluginManager().registerListener(HermesChat.getPlugin(), this);
     }
-
-    public HermesChat getPlugin() {
-        return networkController.getPlugin();
+    
+    private HermesChat getPlugin() {
+    	return HermesChat.getPlugin();
     }
 
     @Override
     public void sendNicknameUpdate(UUID uuid, String nickname) {
-
     }
 
     @Override
     public void sendLoginNotification(UUID uniqueId) {
-        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new  DisplayLoginNotification(this, uniqueId, false));
+    	getPlugin().getProxy().getScheduler().runAsync(HermesChat.getPlugin(), new  DisplayLoginNotification(uniqueId, false));
     }
 
     @Override
@@ -42,27 +41,22 @@ public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.p
 
     @Override
     public void sendStaffChatMessage(UUID sender, String server, String message) {
-        networkController.displayStaffChatMessage(sender, server, message);
+        controller.displayStaffChatMessage(sender, server, message);
     }
 
     @Override
     public void sendChatMessage(UUID sender, String server, String message) {
-        networkController.displayChatMessage(sender, server, message);
+    	controller.displayChatMessage(sender, server, message);
     }
 
     @Override
     public void sendNewUserNotification(UUID to, String message) {
-        networkController.displayUserNotification(to, message);
+    	controller.displayUserNotification(to, message);
     }
 
     @Override
     public void sendNewUserErrorMessage(UUID to, String message) {
-        networkController.displayUserErrorMessage(to, message);
-    }
-
-    @Override
-    public NetworkMessagingController getNetworkController() {
-        return networkController;
+    	controller.displayUserErrorMessage(to, message);
     }
 
     @EventHandler
@@ -72,7 +66,7 @@ public class LocalOnlyProvider implements NetworkProvider, net.md_5.bungee.api.p
 
     @EventHandler
     public void onPostLoginEvent(PostLoginEvent event) {
-        getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(getPlugin(), event.getPlayer().getUniqueId(), new DisplayLoginNotification(this, event.getPlayer().getUniqueId())));
+    	getPlugin().getProxy().getScheduler().runAsync(getPlugin(), new LoadPlayerThenCallback(event.getPlayer().getUniqueId(), new DisplayLoginNotification(event.getPlayer().getUniqueId())));
     }
 
 }
